@@ -5,16 +5,18 @@ import 'flatpickr/dist/flatpickr.min.css';
 import Notiflix from 'notiflix';
 import 'notiflix/dist/notiflix-3.2.5.min.css';
 
-// Optimizing function (shortening the record) for searching for elements on the page
-// Search for input and output elements
-const startBtn = document.querySelector('button[data-start]');
-const datepicker = document.querySelector('#datetime-picker');
-const dataDays = document.querySelector('[data-days]');
-const dataHours = document.querySelector('[data-hours]');
-const dataMinutes = document.querySelector('[data-minutes]');
-const dataSeconds = document.querySelector('[data-seconds]');
+// add helper class for querySelector
 
-// Defining a timer variable
+const qs = selector => document.querySelector(selector);
+
+// Search for input and output elements
+const startBtn = qs('button[data-start]');
+const datepicker = qs('#datetime-picker');
+const dataDays = qs('[data-days]');
+const dataHours = qs('[data-hours]');
+const dataMinutes = qs('[data-minutes]');
+const dataSeconds = qs('[data-seconds]');
+
 let timer = null;
 
 disableBtn(startBtn);
@@ -49,13 +51,13 @@ function countdownTime() {
 
     const { days, hours, minutes, seconds } = convertMs(timeLeft);
 
-    dataDays.innerHTML = String(days).length < 2 ? addLeadingZero(days) : days;
+    dataDays.innerHTML = Number(days).length < 2 ? addLeadingZero(days) : days;
     dataHours.innerHTML =
-      String(hours).length < 2 ? addLeadingZero(hours) : hours;
+      Number(hours).length < 2 ? addLeadingZero(hours) : hours;
     dataMinutes.innerHTML =
-      String(minutes).length < 2 ? addLeadingZero(minutes) : minutes;
+      Number(minutes).length < 2 ? addLeadingZero(minutes) : minutes;
     dataSeconds.innerHTML =
-      String(seconds).length < 2 ? addLeadingZero(seconds) : seconds;
+      Number(seconds).length < 2 ? addLeadingZero(seconds) : seconds;
 
     if (timeLeft < 1000) {
       clearInterval(timer);
