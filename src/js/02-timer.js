@@ -5,90 +5,67 @@ import 'flatpickr/dist/flatpickr.min.css';
 import Notiflix from 'notiflix';
 import 'notiflix/dist/notiflix-3.2.5.min.css';
 
-// add helper class for querySelector
-
-const qs = selector => document.querySelector(selector);
-
-// Search for input and output elements
-const startBtn = qs('button[data-start]');
-const datepicker = qs('#datetime-picker');
-const dataDays = qs('[data-days]');
-const dataHours = qs('[data-hours]');
-const dataMinutes = qs('[data-minutes]');
-const dataSeconds = qs('[data-seconds]');
+const startBtn = document.querySelector('button[data-start');
+const datePicker = document.querySelector('#datetime-picker');
+const dataDays = document.querySelector('[data-days');
+const dataHours = document.querySelector('[data-hours');
+const dataMinutes = document.querySelector('[data-minutes');
+const dataSeconds = document.querySelector('[data-seconds');
 
 let timer = null;
 
-disableBtn(startBtn);
+startBtn.disabled = true;
 
-const options = {
+// flatpickr library
+flatpickr(datePicker, {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
   minuteIncrement: 1,
-  onClose(selectedDate) {
-    const currentDate = new Date();
-    if (selectedDate[0] <= currentDate) {
-      disableBtn(startBtn);
+  onClose(selectedDates) {
+    const currentDate = new Date().getTime();
+    const selectedDate = selectedDates[0].getTime();
+
+    if (selectedDate <= currentDate) {
       Notiflix.Notify.failure('Please choose a date in the future');
+      startBtn.disabled = true;
+      clearInterval(counterDown);
+      dataDays.innerHTML = '00';
+      dataHours.innerHTML = '00';
+      dataMinutes.innerHTML = '00';
+      dataSeconds.innerHTML = '00';
     } else {
-      unDisableBtn(startBtn);
+      startBtn.disabled = false;
+
+      function convertMs(ms) {
+        counterDown = setInterval(() => {
+          const currentDate = new Date().getTime();
+          ms = selectedDate - currentDate;
+
+          const second = 1000;
+          const minute = second * 60;
+          const hour = minute * 60;
+          const day = hour * 24;
+
+          // Remaining days
+          const days = Math.floor(ms / day);
+          // Remaining hours
+          const hours = Math.floor((ms % day) / hour);
+          // Remaining minutes
+          const minutes = Math.floor(((ms % day) % hour) / minute);
+          // Remaining seconds
+          const seconds = Math.floor((((ms % day) % hour) % minute) / second);
+
+          //add leading zero
+          const addLeadingZero = value => value.toString().padStart(2, '0');
+          dataDays.innerHTML = addLeadingZero(days);
+          dataHours.innerHTML = addLeadingZero(hours);
+          dataMinutes.innerHTML = addLeadingZero(minutes);
+          dataSeconds.innerHTML = addLeadingZero(seconds);
+        }, 1000);
+      }
+
+      startBtn.addEventListener('click', convertMs);
     }
   },
-};
-
-flatpickr(datepicker, options);
-
-startBtn.addEventListener('click', countdownTime);
-
-function countdownTime() {
-  timer = setInterval(() => {
-    disableBtn(startBtn);
-
-    const pickedDateMs = new Date(datepicker.value).getTime();
-    const currentDateMs = new Date().getTime();
-    const timeLeft = pickedDateMs - currentDateMs;
-
-    const { days, hours, minutes, seconds } = convertMs(timeLeft);
-
-    dataDays.innerHTML = Number(days).length < 2 ? addLeadingZero(days) : days;
-    dataHours.innerHTML =
-      Number(hours).length < 2 ? addLeadingZero(hours) : hours;
-    dataMinutes.innerHTML =
-      Number(minutes).length < 2 ? addLeadingZero(minutes) : minutes;
-    dataSeconds.innerHTML =
-      Number(seconds).length < 2 ? addLeadingZero(seconds) : seconds;
-
-    if (timeLeft < 1000) {
-      clearInterval(timer);
-      unDisableBtn(startBtn);
-    }
-  }, 1000);
-}
-
-function addLeadingZero(value) {
-  const stringValue = String(value);
-  return stringValue.padStart(2, '0');
-}
-
-function convertMs(ms) {
-  const second = 1000;
-  const minute = second * 60;
-  const hour = minute * 60;
-  const day = hour * 24;
-
-  const days = Math.floor(ms / day);
-  const hours = Math.floor((ms % day) / hour);
-  const minutes = Math.floor(((ms % day) % hour) / minute);
-  const seconds = Math.floor((((ms % day) % hour) % minute) / second);
-
-  return { days, hours, minutes, seconds };
-}
-
-function disableBtn(elem) {
-  elem.disabled = true;
-}
-
-function unDisableBtn(elem) {
-  elem.disabled = false;
-}
+});
