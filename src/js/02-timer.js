@@ -62,6 +62,8 @@ flatpickr(datePicker, {
           dataHours.innerHTML = addLeadingZero(hours);
           dataMinutes.innerHTML = addLeadingZero(minutes);
           dataSeconds.innerHTML = addLeadingZero(seconds);
+
+          startBtn.disabled = true;
         }, 1000);
       }
 
