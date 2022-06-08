@@ -31,6 +31,11 @@ flatpickr('#datetime-picker', {
       startBtn.disabled = true;
     } else {
       startBtn.disabled = false;
+      clearInterval(counterDown);
+      dataDays.innerHTML = '00';
+      dataHours.innerHTML = '00';
+      dataMinutes.innerHTML = '00';
+      dataSeconds.innerHTML = '00';
     }
   },
 });
@@ -42,6 +47,7 @@ function convertMs(ms) {
     const datePickerMs = new Date(
       datePicker.value.replace(/-/g, '/')
     ).getTime();
+    console.log(datePickerMs);
     ms = datePickerMs - currentDate;
 
     const second = 1000;
@@ -66,13 +72,6 @@ function convertMs(ms) {
     dataSeconds.innerHTML = addLeadingZero(seconds);
 
     startBtn.disabled = true;
-    if (ms <= 0) {
-      clearInterval(counterDown);
-      dataDays.innerHTML = '00';
-      dataHours.innerHTML = '00';
-      dataMinutes.innerHTML = '00';
-      dataSeconds.innerHTML = '00';
-    }
   }, 1000);
 }
 
