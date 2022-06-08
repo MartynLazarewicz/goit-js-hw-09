@@ -12,8 +12,6 @@ const dataHours = document.querySelector('[data-hours');
 const dataMinutes = document.querySelector('[data-minutes');
 const dataSeconds = document.querySelector('[data-seconds');
 
-let timer = null;
-
 startBtn.disabled = true;
 
 // flatpickr library
