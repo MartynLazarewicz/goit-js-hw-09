@@ -14,6 +14,8 @@ const dataSeconds = document.querySelector('[data-seconds');
 
 startBtn.disabled = true;
 
+let counterDown;
+
 // flatpickr library
 flatpickr('#datetime-picker', {
   enableTime: true,
@@ -29,12 +31,17 @@ flatpickr('#datetime-picker', {
       startBtn.disabled = true;
     } else {
       startBtn.disabled = false;
+      clearInterval(counterDown);
+      dataDays.innerHTML = '00';
+      dataHours.innerHTML = '00';
+      dataMinutes.innerHTML = '00';
+      dataSeconds.innerHTML = '00';
     }
   },
 });
 
 function convertMs(ms) {
-  let counterDown = setInterval(() => {
+  counterDown = setInterval(() => {
     const currentDate = new Date().getTime();
 
     const datePickerMs = new Date(
