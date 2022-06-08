@@ -14,7 +14,7 @@ function createPromises(e) {
 
   let delay = Number(firstDelay.value);
 
-  for (let i = 1; i <= Number(promiseAmount.value); i++) {
+  for (let i = 0; i <= Number(promiseAmount.value); i++) {
     createPromise(i, delay)
       .then(({ i, delay }) => {
         Notiflix.Notify.success(`✅ Fulfilled promise ${i} in ${delay}ms`);
