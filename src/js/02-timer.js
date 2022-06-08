@@ -40,7 +40,6 @@ function convertMs(ms) {
     const datePickerMs = new Date(
       datePicker.value.replace(/-/g, '/')
     ).getTime();
-    console.log(datePickerMs);
     ms = datePickerMs - currentDate;
 
     const second = 1000;
